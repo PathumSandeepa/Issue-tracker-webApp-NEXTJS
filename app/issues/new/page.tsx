@@ -7,16 +7,22 @@ import { useForm, Controller } from "react-hook-form";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/createIssueSchema";
-import { z } from 'zod';
+import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
     const router = useRouter();
-    const { register, control, handleSubmit, formState:{ errors } } = useForm<IssueForm>({
-      resolver: zodResolver(createIssueSchema)
+    const {
+        register,
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<IssueForm>({
+        resolver: zodResolver(createIssueSchema),
     });
     const [error, setError] = useState("");
 
@@ -41,7 +47,7 @@ const NewIssuePage = () => {
                 <TextField.Root placeholder="Title" {...register("title")}>
                     <TextField.Slot></TextField.Slot>
                 </TextField.Root>
-                {errors.title && <Text color='red' as="p">{errors.title.message}</Text>}
+                <ErrorMessage>{errors.title?.message}</ErrorMessage>
                 <Controller
                     name="description"
                     control={control}
@@ -49,7 +55,7 @@ const NewIssuePage = () => {
                         <SimpleMDE {...field} placeholder="Description" />
                     )}
                 />
-                {errors.title && <Text color='red' as="p">{errors.title.message}</Text>}
+                <ErrorMessage>{errors.title?.message}</ErrorMessage>
                 <Button> Submit New Issue</Button>
             </form>
         </div>
